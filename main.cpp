@@ -4,9 +4,48 @@
 using namespace std;
 
 /*
+ TODO: LAST LOG
+ queue
+1
+1
+1
+1
+1
+1
+check 1
+song_5 600 88 at arr[0]
+song_6 500 110 at arr[1]
+song_3 800 44 at arr[2]
+song_4 700 66 at arr[3]
+size: 2
+check 2
+1
+nullptr at arr[0]
+nullptr at arr[1]
+song_5 600 88 at arr[2]
+song_4 700 66 at arr[3]
+1
+check 3
+nullptr at arr[0]
+nullptr at arr[1]
+nullptr at arr[2]
+song_6 500 110 at arr[3]
+1
+110
+188
+-4095
+-4095
+-4095
+check 4
+nullptr at arr[0]
+nullptr at arr[1]
+nullptr at arr[2]
+nullptr at arr[3]
+ */
+
+/*
  нужна ли функция суицида структуре?
  как решить проблему с выводом данных структуры
-
  */
 
 #define STACK_SIZE 6
@@ -129,11 +168,15 @@ struct Queue {
 
     void printArr() const {
         for (int i = 0; i < size; i++) {
-            if (arr[i] == nullptr) continue;
-            printf("%s %d %d\n", arr[i]->name, arr[i]->length, arr[i]->likes);
+            if (arr[i] == nullptr) {
+                printf("nullptr at arr[%d]\n", i);
+                continue;
+            }
+            printf("%s %d %d at arr[%d]\n", arr[i]->name, arr[i]->length, arr[i]->likes, i);
         }
     }
 
+    // TODO 20.11
     int push(Song *song) {
         if (getSize() == size)
             return -0xFFF;
@@ -142,11 +185,13 @@ struct Queue {
         return 1;
     }
 
+    // TODO 20.11
     // returns nullptr if queue is empty
     Song* pop() {
         if (isEmpty())
             return nullptr;
         Song *s = arr[head];
+        arr[head] = nullptr;
         head = (head + 1) % (int) size;
         return s;
     }
@@ -176,7 +221,7 @@ struct Queue {
     int getSize()
     const {
         if (head > tail)
-            return (int) size - head + tail;
+            return head - tail;
         else
             return tail - head;
     }
@@ -219,21 +264,29 @@ int main() {
     Queue queue(4);
     auto *ptr_2 = &queue;
     char *song_name;
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 6; i++) { // 1
         song_name = new char[32];
         sprintf(song_name, "song_%d", i + 1);
         printf("%d\n", ptr_2->push(new Song{song_name, 1000 - (100 * i), 22 * i}));
     }
+    cout << "check 1\n";
     ptr_2->printArr();
     cout << "size: " << ptr_2->getSize() << endl;
-    Song song1 = *(ptr_2->pop());
+    Song song1 = *(ptr_2->pop()); // 2
     Song song2 = *(ptr_2->pop());
-    printf("%d\n", ptr_2->push(&song1));
+    cout << "check 2\n";
+    printf("%d\n", ptr_2->push(&song1)); // 3
+    ptr_2->printArr();
     printf("%d\n", ptr_2->push(&song2));
     Song s = *(ptr_2->pop());
     s.likes += 100;
-    printf("%d\n", ptr_2->push(&s));
+    cout << "check 3\n";
+    ptr_2->printArr();
+    printf("%d\n", ptr_2->push(&s)); // 4
     for (int i = 0; i < 5; i++) {
-        printf("%d\n", ptr_2->pop());
+        Song *obj = ptr_2->pop();
+        printf("%d\n", obj == nullptr ? -0xFFF : obj->likes);
     }
+    cout << "check 4\n";
+    ptr_2->printArr();
 }
