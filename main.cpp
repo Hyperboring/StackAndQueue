@@ -67,7 +67,7 @@ struct Stack {
         top = -1;
         for (int i = 0; i < cl; i++)
             arr[i] = NULL_BOOK;
-        return cl;
+        return cl + 1;
     }
 
     Book getTop() {
@@ -77,14 +77,17 @@ struct Stack {
     }
 
     void print() {
-        for (int i = 0; i < top + 1; i++) {
-            if (!arr[i].isNull()) {
-                Book b = arr[i];
-                printf("Book: %s, Pages: %d, Price: %.2f.\n",
+        Book parr[size];
+        for (Book &b : parr)
+            b = pop();
+        for (int i = size - 1; i >= 0; i--) {
+            Book b = parr[i];
+            if (!b.isNull())
+                printf("Book: %s, Pages: %d, Price: %.3f.\n",
                        b.name,
                        b.pages,
                        b.price);
-            }
+            push(b);
         }
     }
 
@@ -170,18 +173,22 @@ struct Queue {
     }
 
     Song getFront() {
+        if (isEmpty())
+            return NULL_SONG;
         return arr[head];
     }
 
     void print() {
-        for (int i = head; i != tail; i = (i + 1) % size) {
-            if (!arr[i].isNull()) {
-                Song s = arr[i];
+        Song parr[size];
+        for (Song &s : parr)
+            s = pop();
+        for (Song s : parr) {
+            if (!s.isNull())
                 printf("Song: %s, Length: %d, Likes: %d.\n",
                        s.name,
                        s.length,
                        s.likes);
-            }
+            push(s);
         }
     }
 
@@ -238,9 +245,112 @@ void playlist() {
     playlist.push(s1);
 
     playlist.print();
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++)
         playlist.pop();
+}
+
+char getInverseBrace(char brace) {
+    switch (brace) {
+        case '{':
+            return '}';
+        case '(':
+            return ')';
+        case '[':
+            return ']';
+        default:
+            return '?';
     }
+}
+
+bool braces(char braces[], int len) {
+    if (len % 2 != 0)
+        return false;
+
+    struct bStack {
+        char *arr{};
+        int size;
+        int top = -1;
+
+        explicit bStack(int size) {
+            this->size = size;
+            arr = new char[size];
+            for (int i = 0; i < size; i++)
+                arr[i] = '?';
+        }
+
+        // возвращает индекс, куда записан элемент или -1, если стек забит
+        int push(char b) {
+            if (top == size - 1)
+                return -1;
+            arr[++top] = b;
+            return top;
+        }
+
+        // возвращает структуру книги или пустую структуру, если стек пуст
+        char pop() {
+            if (isEmpty())
+                return '?';
+            char b = arr[top];
+            arr[top] = '?';
+            top--;
+            return b;
+        }
+
+        bool isEmpty()
+        const {
+            return top == -1;
+        }
+
+        int getSize()
+        const {
+            return top + 1;
+        }
+
+        int clear() {
+            if (isEmpty())
+                return 0;
+            int cl = top;
+            top = -1;
+            for (int i = 0; i < cl; i++)
+                arr[i] = '?';
+            return cl + 1;
+        }
+
+        char getTop()
+        const {
+            if (isEmpty())
+                return '?';
+            return arr[top];
+        }
+
+        void print() {
+            char parr[size];
+            for (char &c : parr)
+                c = pop();
+            for (int i = size - 1; i >= 0; i--) {
+                char b = parr[i];
+                printf("%c ", b);
+                push(b);
+            }
+        }
+
+        void close() {
+            delete[] arr;
+            delete this;
+        }
+    };
+    bStack s(len);
+    bool b = false;
+    for (int i = len - 1; i >= 0; i--) {
+        if (s.getTop() != '?' && s.getTop() == getInverseBrace(braces[i])) {
+            b = true;
+            s.pop();
+        } else {
+            s.push(braces[i]);
+            b = false;
+        }
+    }
+    return b;
 }
 
 int main() {
@@ -250,6 +360,10 @@ int main() {
     bookStack();
     cout << endl;
     playlist();
+    cout << endl;
+    const int size = 6;
+    char arr[size]{'{', '[', '(', ')', ')', '}'};
+    printf("%d\n", braces(arr, size));
 
     // TODO доп задание
 }
