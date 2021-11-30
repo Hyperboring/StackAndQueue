@@ -17,7 +17,7 @@ void bookStack() {
             {"Very Hungry Caterpillar", 80, 15.99},
             {"Gruffalo", 129, 9.99}
     };
-    general::Stack<Book> books(6);
+    Stack<Book> books(6);
     for (int i = 0; i < 5; i++)
         books.push(storage[i]);
     books.pop();
@@ -28,7 +28,7 @@ void bookStack() {
     Book b = books.pop();
     b.pages -= 10;
     books.push(b);
-    general::printBook(&books);
+    printBook(&books);
     for (int i = 0; i < 8; i++) {
         books.pop();
     }
@@ -43,7 +43,7 @@ void playlist() {
             {"Empress of Light", 169, 80431},
             {"The Endless Void", 230, 15490}
     };
-    general::Queue playlist;
+    Queue playlist;
     for (const Song &s : music)
         playlist.push(s);
     Song s1 = playlist.pop();
@@ -64,7 +64,7 @@ bool braces(char braces[], int len) {
     if (len % 2 != 0)
         return false;
 
-    general::Stack<char> s;
+    Stack<char> s(6);
     bool b = false;
     for (int i = len - 1; i >= 0; i--) {
         if (s.getTop() != '?' && s.getTop() == extra::getInverseBrace(braces[i])) {
@@ -89,5 +89,5 @@ int main() {
     cout << endl;
     const int size = 6;
     char arr[size]{'{', '[', '(', ')', ']', '}'};
-//    printf("%d\n", braces(arr, size));
+    printf("%d\n", braces(arr, size));
 }

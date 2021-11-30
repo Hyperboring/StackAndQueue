@@ -2,7 +2,6 @@
 #include "windows.h"
 #include "iostream"
 
-static constexpr Book NULL_BOOK = {"null", -1, -1};
 static constexpr Song NULL_SONG = {"null", -1, -1};
 
 bool Book::isNull() const {
@@ -18,73 +17,10 @@ bool Song::isNull() const {
  */
 
 
-template<typename T>
-general::Stack<T>::Stack() {
-    arr = new T[size];
-}
 
-template<typename T>
-general::Stack<T>::Stack(int len) {
-    arr = new T[len];
-}
-
-// возвращает индекс, куда записан элемент или -1, если стек забит
-template<typename T>
-int general::Stack<T>::push(T b) {
-    if (top == size - 1)
-        return -1;
-    arr[++top] = b;
-    return top;
-}
-
-// возвращает структуру книги или пустую структуру, если стек пуст
-template<typename T>
-T general::Stack<T>::pop() {
-    if (isEmpty())
-        return NULL_BOOK;
-    Book b = arr[top];
-    arr[top] = NULL_BOOK;
-    top--;
-    return b;
-}
-
-template<typename T>
-bool general::Stack<T>::isEmpty()
-const {
-    return top == -1;
-}
-
-template<typename T>
-int general::Stack<T>::getSize()
-const {
-    return top + 1;
-}
-
-template<typename T>
-int general::Stack<T>::clear() {
-    if (isEmpty())
-        return 0;
-    int cl = top;
-    top = -1;
-    for (int i = 0; i < cl; i++)
-        arr[i] = NULL_BOOK;
-    return cl + 1;
-}
-
-template<typename T>
-T general::Stack<T>::getTop() {
-    if (isEmpty())
-        return NULL_BOOK;
-    return arr[top];
-}
-
-template<typename T>
-void general::Stack<T>::close() {
-    delete[] arr;
-}
 
 // TODO переписать отдельной функцией вне стека (очереди)
-void general::printBook(Stack<Book> *stack) {
+void printBook(Stack<Book> *stack) {
     Book parr[Stack<Book>::size];
     for (Book &b : parr)
         b = stack->pop();
@@ -105,7 +41,7 @@ void general::printBook(Stack<Book> *stack) {
 
 
 // возвращает индекс, куда записан элемент или -1, если очередь забита
-int general::Queue::push(Song s) {
+int Queue::push(Song s) {
     if (getSize() == size - 1)
         return -1;
     int i = tail;
@@ -114,7 +50,7 @@ int general::Queue::push(Song s) {
     return i;
 }
 
-Song general::Queue::pop() {
+Song Queue::pop() {
     if (isEmpty())
         return NULL_SONG;
     Song s = arr[head];
@@ -123,19 +59,19 @@ Song general::Queue::pop() {
     return s;
 }
 
-bool general::Queue::isEmpty()
+bool Queue::isEmpty()
 const {
     return head == tail;
 }
 
-int general::Queue::getSize()
+int Queue::getSize()
 const {
     return head > tail ?
            size - head + tail :
            tail - head;
 }
 
-int general::Queue::clear() {
+int Queue::clear() {
     if (isEmpty()) {
         head = 0;
         tail = 0;
@@ -158,13 +94,13 @@ int general::Queue::clear() {
     return cl;
 }
 
-Song general::Queue::getFront() {
+Song Queue::getFront() {
     if (isEmpty())
         return NULL_SONG;
     return arr[head];
 }
 
-//void general::Queue::print() {
+//void Queue::print() {
 //    Song parr[size];
 //    for (Song &s : parr)
 //        s = pop();
@@ -184,18 +120,18 @@ Song general::Queue::getFront() {
 
 
 
-//char extra::getInverseBrace(char brace) {
-//    switch (brace) {
-//        case '{':
-//            return '}';
-//        case '(':
-//            return ')';
-//        case '[':
-//            return ']';
-//        default:
-//            return '?';
-//    }
-//}
+char extra::getInverseBrace(char brace) {
+    switch (brace) {
+        case '{':
+            return '}';
+        case '(':
+            return ')';
+        case '[':
+            return ']';
+        default:
+            return '?';
+    }
+}
 //
 //extra::Stack::Stack(int size) {
 //    this->size = size;

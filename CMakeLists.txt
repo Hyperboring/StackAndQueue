@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 set(PROJECT_HEADERS
         header/structures.h
+        header/stack.tpp
 )
 
 set(PROJECT_SOURCES
