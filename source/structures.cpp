@@ -18,14 +18,19 @@ bool Song::isNull() const {
  */
 
 
+template<typename T>
+general::Stack<T>::Stack() {
+    arr = new T[size];
+}
 
-general::Stack::Stack() {
-    for (Book &b : arr)
-        b = NULL_BOOK;
-};
+template<typename T>
+general::Stack<T>::Stack(int len) {
+    arr = new T[len];
+}
 
 // возвращает индекс, куда записан элемент или -1, если стек забит
-int general::Stack::push(Book b) {
+template<typename T>
+int general::Stack<T>::push(T b) {
     if (top == size - 1)
         return -1;
     arr[++top] = b;
@@ -33,7 +38,8 @@ int general::Stack::push(Book b) {
 }
 
 // возвращает структуру книги или пустую структуру, если стек пуст
-Book general::Stack::pop() {
+template<typename T>
+T general::Stack<T>::pop() {
     if (isEmpty())
         return NULL_BOOK;
     Book b = arr[top];
@@ -42,17 +48,20 @@ Book general::Stack::pop() {
     return b;
 }
 
-bool general::Stack::isEmpty()
+template<typename T>
+bool general::Stack<T>::isEmpty()
 const {
     return top == -1;
 }
 
-int general::Stack::getSize()
+template<typename T>
+int general::Stack<T>::getSize()
 const {
     return top + 1;
 }
 
-int general::Stack::clear() {
+template<typename T>
+int general::Stack<T>::clear() {
     if (isEmpty())
         return 0;
     int cl = top;
@@ -62,24 +71,31 @@ int general::Stack::clear() {
     return cl + 1;
 }
 
-Book general::Stack::getTop() {
+template<typename T>
+T general::Stack<T>::getTop() {
     if (isEmpty())
         return NULL_BOOK;
     return arr[top];
 }
 
-void general::Stack::print() {
-    Book parr[size];
+template<typename T>
+void general::Stack<T>::close() {
+    delete[] arr;
+}
+
+// TODO переписать отдельной функцией вне стека (очереди)
+void general::printBook(Stack<Book> *stack) {
+    Book parr[Stack<Book>::size];
     for (Book &b : parr)
-        b = pop();
-    for (int i = size - 1; i >= 0; i--) {
+        b = stack->pop();
+    for (int i = Stack<Book>::size - 1; i >= 0; i--) { // Clang-Tidy: Static member accessed through instance when stack->size
         Book b = parr[i];
         if (!b.isNull())
             printf("Book: %s, Pages: %d, Price: %.3f.\n",
                    b.name,
                    b.pages,
                    b.price);
-        push(b);
+        stack->push(b);
     }
 }
 
@@ -87,12 +103,6 @@ void general::Stack::print() {
  * QUEUE
  */
 
-
-
-general::Queue::Queue() {
-    for (Song &s : arr)
-        s = NULL_SONG;
-}
 
 // возвращает индекс, куда записан элемент или -1, если очередь забита
 int general::Queue::push(Song s) {
@@ -154,19 +164,19 @@ Song general::Queue::getFront() {
     return arr[head];
 }
 
-void general::Queue::print() {
-    Song parr[size];
-    for (Song &s : parr)
-        s = pop();
-    for (Song s : parr) {
-        if (!s.isNull())
-            printf("Song: %s, Length: %d, Likes: %d.\n",
-                   s.name,
-                   s.length,
-                   s.likes);
-        push(s);
-    }
-}
+//void general::Queue::print() {
+//    Song parr[size];
+//    for (Song &s : parr)
+//        s = pop();
+//    for (Song s : parr) {
+//        if (!s.isNull())
+//            printf("Song: %s, Length: %d, Likes: %d.\n",
+//                   s.name,
+//                   s.length,
+//                   s.likes);
+//        push(s);
+//    }
+//}
 
 /*
  * EXTRA
@@ -174,83 +184,83 @@ void general::Queue::print() {
 
 
 
-char extra::getInverseBrace(char brace) {
-    switch (brace) {
-        case '{':
-            return '}';
-        case '(':
-            return ')';
-        case '[':
-            return ']';
-        default:
-            return '?';
-    }
-}
-
-extra::Stack::Stack(int size) {
-    this->size = size;
-    arr = new char[size];
-    for (int i = 0; i < size; i++)
-        arr[i] = '?';
-}
-
-// возвращает индекс, куда записан элемент или -1, если стек забит
-int extra::Stack::push(char b) {
-    if (top == size - 1)
-        return -1;
-    arr[++top] = b;
-    return top;
-}
-
-// возвращает структуру книги или пустую структуру, если стек пуст
-char extra::Stack::pop() {
-    if (isEmpty())
-        return '?';
-    char b = arr[top];
-    arr[top] = '?';
-    top--;
-    return b;
-}
-
-bool extra::Stack::isEmpty()
-const {
-    return top == -1;
-}
-
-int extra::Stack::getSize()
-const {
-    return top + 1;
-}
-
-int extra::Stack::clear() {
-    if (isEmpty())
-        return 0;
-    int cl = top;
-    top = -1;
-    for (int i = 0; i < cl; i++)
-        arr[i] = '?';
-    return cl + 1;
-}
-
-char extra::Stack::getTop()
-const {
-    if (isEmpty())
-        return '?';
-    return arr[top];
-}
-
-void extra::Stack::print() {
-    char parr[size];
-    for (char &c : parr)
-        c = pop();
-    for (int i = size - 1; i >= 0; i--) {
-        char b = parr[i];
-        printf("%c ", b);
-        push(b);
-    }
-}
-
-void extra::Stack::close() const {
-    delete[] arr;
-//    delete this;
-}
+//char extra::getInverseBrace(char brace) {
+//    switch (brace) {
+//        case '{':
+//            return '}';
+//        case '(':
+//            return ')';
+//        case '[':
+//            return ']';
+//        default:
+//            return '?';
+//    }
+//}
+//
+//extra::Stack::Stack(int size) {
+//    this->size = size;
+//    arr = new char[size];
+//    for (int i = 0; i < size; i++)
+//        arr[i] = '?';
+//}
+//
+//// возвращает индекс, куда записан элемент или -1, если стек забит
+//int extra::Stack::push(char b) {
+//    if (top == size - 1)
+//        return -1;
+//    arr[++top] = b;
+//    return top;
+//}
+//
+//// возвращает структуру книги или пустую структуру, если стек пуст
+//char extra::Stack::pop() {
+//    if (isEmpty())
+//        return '?';
+//    char b = arr[top];
+//    arr[top] = '?';
+//    top--;
+//    return b;
+//}
+//
+//bool extra::Stack::isEmpty()
+//const {
+//    return top == -1;
+//}
+//
+//int extra::Stack::getSize()
+//const {
+//    return top + 1;
+//}
+//
+//int extra::Stack::clear() {
+//    if (isEmpty())
+//        return 0;
+//    int cl = top;
+//    top = -1;
+//    for (int i = 0; i < cl; i++)
+//        arr[i] = '?';
+//    return cl + 1;
+//}
+//
+//char extra::Stack::getTop()
+//const {
+//    if (isEmpty())
+//        return '?';
+//    return arr[top];
+//}
+//
+//void extra::Stack::print() {
+//    char parr[size];
+//    for (char &c : parr)
+//        c = pop();
+//    for (int i = size - 1; i >= 0; i--) {
+//        char b = parr[i];
+//        printf("%c ", b);
+//        push(b);
+//    }
+//}
+//
+//void extra::Stack::close() const {
+//    delete[] arr;
+////    delete this;
+//}

@@ -21,24 +21,26 @@ struct Song {
 
 namespace general {
 
+    template<typename T>
     struct Stack {
 
         static const int size = STACK_SIZE;
-        Book arr[size]{};
+        T *arr;
         int top = -1;
 
         Stack();
+        explicit Stack(int len);
 
         // возвращает индекс, куда записан элемент или -1, если стек забит
-        int push(Book b);
+        int push(T b);
 
         // возвращает структуру книги или пустую структуру, если стек пуст
-        Book pop();
+        T pop();
         bool isEmpty() const;
         int getSize() const;
         int clear();
-        Book getTop();
-        void print();
+        T getTop();
+        void close();
     };
 
     struct Queue {
@@ -47,37 +49,19 @@ namespace general {
         int head = 0;
         int tail = 0;
 
-        Queue();
-
         int push(Song b);
         Song pop();
         bool isEmpty() const;
         int getSize() const;
         int clear();
         Song getFront();
-        void print();
     };
+
+    void printBook(Stack<Book> *stack);
+    void printQueue(Queue *queue);
 }
 
 namespace extra {
 
     char getInverseBrace(char brace);
-
-    struct Stack {
-
-        char *arr{};
-        int size;
-        int top = -1;
-
-        explicit Stack(int size);
-
-        int push(char b);
-        char pop();
-        bool isEmpty() const;
-        int getSize() const;
-        int clear();
-        char getTop() const;
-        void print();
-        void close() const;
-    };
 }

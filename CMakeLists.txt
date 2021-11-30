@@ -3,4 +3,12 @@ project(StackAndQueue)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(StackAndQueue main.cpp header/structures.h source/structures.cpp)
+set(PROJECT_HEADERS
+        header/structures.h
+)
+
+set(PROJECT_SOURCES
+        source/structures.cpp
+)
+
+add_executable(StackAndQueue main.cpp ${PROJECT_HEADERS} ${PROJECT_SOURCES})
