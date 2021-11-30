@@ -62,22 +62,20 @@ void playlist() {
         playlist.pop();
 }
 
-string braces(char braces[], int len) {
+string braces(char braces[], unsigned int len) {
     if (len % 2 != 0)
         return "no";
 
-    Stack<char> s(len);
-    bool b = false;
-    for (int i = len - 1; i >= 0; i--) {
-        if (s.getTop() != '?' && s.getTop() == extra::getInverseBrace(braces[i])) {
-            b = true;
+    Stack<char> s((int) len);
+    for (int i = (int) len - 1; i >= 0; i--) {
+        if (s.getTop() == extra::getInverseBrace(braces[i]))
             s.pop();
-        } else {
+        else
             s.push(braces[i]);
-            b = false;
-        }
     }
+    bool b = s.isEmpty();
     s.clear();
+    s.close();
     return b ? "yes" : "no";
 }
 
@@ -89,7 +87,11 @@ int main() {
     cout << endl;
     playlist();
     cout << endl;
-    const int size = 6;
-    char arr[size]{'{', '[', '(', ')', ']', '}'};
-    cout << braces(arr, size) << endl;
+//    const int size = 6;
+//    char arr[size]{'{', '[', '(', ')', ']', '}'};
+    string s;
+    cin >> s;
+    unsigned int len = s.length();
+    char *c_str = &s[0];
+    cout << braces(c_str, len) << endl;
 }
