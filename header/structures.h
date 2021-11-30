@@ -1,12 +1,15 @@
 #pragma once
 
+#include "windows.h"
+
 #define STACK_SIZE 6
 #define QUEUE_SIZE 4
 
 struct Book {
-    char name[64];
-    int pages;
-    double price;
+
+    char name[64]{};
+    int pages{};
+    double price{};
 
     bool isNull() const;
 };
@@ -22,8 +25,8 @@ struct Song {
 template<typename T>
 struct Stack {
 
-    static const int size = STACK_SIZE;
-    T *arr;
+    int size = STACK_SIZE;
+    T *arr{};
     int top = -1;
 
     Stack();

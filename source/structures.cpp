@@ -2,14 +2,15 @@
 #include "windows.h"
 #include "iostream"
 
-static constexpr Song NULL_SONG = {"null", -1, -1};
+static constexpr Song NULL_SONG = {"", 0, 0};
 
 bool Book::isNull() const {
-    return strcmp(name, "null") == 0 && pages == -1 && price == -1;
+    return strcmp(name, "") == 0 && pages == 0 && price == 0;
 }
 
+
 bool Song::isNull() const {
-    return strcmp(name, "null") == 0 && length == -1 && likes == -1;
+    return strcmp(name, "") == 0 && length == 0 && likes == 0;
 }
 
 /*
@@ -18,13 +19,12 @@ bool Song::isNull() const {
 
 
 
-
-// TODO переписать отдельной функцией вне стека (очереди)
 void printBook(Stack<Book> *stack) {
-    Book parr[Stack<Book>::size];
+    Stack<Book> s = *stack;
+    Book parr[stack->size];
     for (Book &b : parr)
         b = stack->pop();
-    for (int i = Stack<Book>::size - 1; i >= 0; i--) { // Clang-Tidy: Static member accessed through instance when stack->size
+    for (int i = stack->size - 1; i >= 0; i--) { // Clang-Tidy: Static member accessed through instance when stack->size
         Book b = parr[i];
         if (!b.isNull())
             printf("Book: %s, Pages: %d, Price: %.3f.\n",
@@ -38,6 +38,7 @@ void printBook(Stack<Book> *stack) {
 /*
  * QUEUE
  */
+
 
 
 // возвращает индекс, куда записан элемент или -1, если очередь забита
@@ -100,19 +101,19 @@ Song Queue::getFront() {
     return arr[head];
 }
 
-//void Queue::print() {
-//    Song parr[size];
-//    for (Song &s : parr)
-//        s = pop();
-//    for (Song s : parr) {
-//        if (!s.isNull())
-//            printf("Song: %s, Length: %d, Likes: %d.\n",
-//                   s.name,
-//                   s.length,
-//                   s.likes);
-//        push(s);
-//    }
-//}
+void printQueue(Queue *queue) {
+    Song parr[Queue::size];
+    for (Song &s : parr)
+        s = queue->pop();
+    for (Song s : parr) {
+        if (!s.isNull())
+            printf("Song: %s, Length: %d, Likes: %d.\n",
+                   s.name,
+                   s.length,
+                   s.likes);
+        queue->push(s);
+    }
+}
 
 /*
  * EXTRA
@@ -132,71 +133,3 @@ char extra::getInverseBrace(char brace) {
             return '?';
     }
 }
-//
-//extra::Stack::Stack(int size) {
-//    this->size = size;
-//    arr = new char[size];
-//    for (int i = 0; i < size; i++)
-//        arr[i] = '?';
-//}
-//
-//// возвращает индекс, куда записан элемент или -1, если стек забит
-//int extra::Stack::push(char b) {
-//    if (top == size - 1)
-//        return -1;
-//    arr[++top] = b;
-//    return top;
-//}
-//
-//// возвращает структуру книги или пустую структуру, если стек пуст
-//char extra::Stack::pop() {
-//    if (isEmpty())
-//        return '?';
-//    char b = arr[top];
-//    arr[top] = '?';
-//    top--;
-//    return b;
-//}
-//
-//bool extra::Stack::isEmpty()
-//const {
-//    return top == -1;
-//}
-//
-//int extra::Stack::getSize()
-//const {
-//    return top + 1;
-//}
-//
-//int extra::Stack::clear() {
-//    if (isEmpty())
-//        return 0;
-//    int cl = top;
-//    top = -1;
-//    for (int i = 0; i < cl; i++)
-//        arr[i] = '?';
-//    return cl + 1;
-//}
-//
-//char extra::Stack::getTop()
-//const {
-//    if (isEmpty())
-//        return '?';
-//    return arr[top];
-//}
-//
-//void extra::Stack::print() {
-//    char parr[size];
-//    for (char &c : parr)
-//        c = pop();
-//    for (int i = size - 1; i >= 0; i--) {
-//        char b = parr[i];
-//        printf("%c ", b);
-//        push(b);
-//    }
-//}
-//
-//void extra::Stack::close() const {
-//    delete[] arr;
-////    delete this;
-//}

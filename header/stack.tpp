@@ -1,15 +1,18 @@
 #include "windows.h"
 
-static constexpr Book NULL_BOOK = {"null", -1, -1};
-
 template<typename T>
 Stack<T>::Stack() {
     arr = new T[size];
+    for (int i = 0; i < size; i++)
+        arr[i] = T();
 }
 
 template<typename T>
 Stack<T>::Stack(int len) {
+    this->size = len;
     arr = new T[len];
+    for (int i = 0; i < len; i++)
+        arr[i] = T(); // zero initialization
 }
 
 // возвращает индекс, куда записан элемент или -1, если стек забит
@@ -27,7 +30,7 @@ T Stack<T>::pop() {
     if (isEmpty())
         return arr[0];
     T b = arr[top];
-    arr[top] = arr[0];
+    arr[top] = T();
     top--;
     return b;
 }
@@ -51,7 +54,7 @@ int Stack<T>::clear() {
     int cl = top;
     top = -1;
     for (int i = 0; i < cl; i++)
-        arr[i] = (T) NULL;
+        arr[i] = T();
     return cl + 1;
 }
 
